@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Tranca IoT</title>
+
+    <style>
+
+        /* =========================
+           CONFIGURAÇÕES GERAIS
+        ========================= */
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #eef2f7;
+            color: #172033;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            margin: auto;
+            padding: 35px 25px;
+        }
+
+
+        /* =========================
+           CABEÇALHO
+        ========================= */
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .titulo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .icone-logo {
+            width: 52px;
+            height: 52px;
+            background: #123c69;
+            color: white;
+            border-radius: 14px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 25px;
+        }
+
+        h1 {
+            font-size: 30px;
+            color: #123c69;
+        }
+
+        .subtitulo {
+            color: #697586;
+            font-size: 14px;
+            margin-top: 3px;
+        }
+
+        .status-online {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            background: #ffffff;
+            padding: 10px 15px;
+            border-radius: 25px;
+
+            box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .bolinha {
+            width: 10px;
+            height: 10px;
+            background: #22c55e;
+            border-radius: 50%;
+
+            box-shadow: 0 0 8px rgba(34,197,94,0.7);
+        }
+
+
+        /* =========================
+           CARD PRINCIPAL DA TRANCA
+        ========================= */
+
+        .tranca-card {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 35px;
+
+            box-shadow: 0 8px 30px rgba(20,40,70,0.08);
+
+            text-align: center;
+
+            margin-bottom: 22px;
+        }
+
+        .tranca-topo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 20px;
+        }
+
+        .tag {
+            background: #e8eef6;
+            color: #123c69;
+
+            padding: 7px 14px;
+            border-radius: 20px;
+
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .estado {
+            font-size: 13px;
+            color: #22a05a;
+            font-weight: bold;
+        }
+
+        .cadeado {
+            width: 105px;
+            height: 105px;
+
+            margin: 20px auto;
+
+            border-radius: 50%;
+
+            background: #edf3f9;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 50px;
+
+            transition: 0.3s;
+        }
+
+        .cadeado:hover {
+            transform: scale(1.05);
+        }
+
+        .status-tranca {
+            font-size: 25px;
+            font-weight: bold;
+            color: #172033;
+        }
+
+        .descricao-tranca {
+            color: #718096;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+
+        /* =========================
+           BOTÃO PRINCIPAL
+        ========================= */
+
+        #btnAbrir {
+            margin-top: 25px;
+
+            width: 230px;
+
+            padding: 14px 25px;
+
+            border: none;
+            border-radius: 10px;
+
+            background: #123c69;
+            color: white;
+
+            font-size: 16px;
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        #btnAbrir:hover {
+            background: #0d2d50;
+            transform: translateY(-2px);
+
+            box-shadow: 0 6px 15px rgba(18,60,105,0.25);
+        }
+
+
+        /* =========================
+           CARDS DE INFORMAÇÃO
+        ========================= */
+
+        .info-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 20px;
+
+            margin-bottom: 22px;
+        }
+
+        .info-card {
+            background: white;
+
+            padding: 22px;
+
+            border-radius: 15px;
+
+            box-shadow: 0 5px 20px rgba(20,40,70,0.06);
+        }
+
+        .info-card .icone {
+            font-size: 25px;
+            margin-bottom: 12px;
+        }
+
+        .info-card h3 {
+            font-size: 13px;
+            color: #7a8699;
+
+            text-transform: uppercase;
+
+            margin-bottom: 5px;
+        }
+
+        .info-card p {
+            font-size: 18px;
+            font-weight: bold;
+            color: #172033;
+        }
+
+        .online {
+            color: #22a05a !important;
+        }
+
+
+        /* =========================
+           HISTÓRICO
+        ========================= */
+
+        .historico-card {
+            background: white;
+
+            border-radius: 18px;
+
+            padding: 30px;
+
+            box-shadow: 0 8px 30px rgba(20,40,70,0.08);
+        }
+
+        .historico-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 25px;
+        }
+
+        .historico-header h2 {
+            font-size: 22px;
+            color: #172033;
+        }
+
+        .historico-header span {
+            color: #7a8699;
+            font-size: 13px;
+        }
+
+
+        /* =========================
+           FORMULÁRIO
+        ========================= */
+
+        form {
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr 1fr auto;
+
+            gap: 12px;
+
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+
+            padding: 12px 14px;
+
+            border: 1px solid #d8dee8;
+
+            border-radius: 9px;
+
+            font-size: 14px;
+
+            outline: none;
+
+            transition: 0.2s;
+        }
+
+        input:focus {
+            border-color: #123c69;
+
+            box-shadow:
+                0 0 0 3px rgba(18,60,105,0.08);
+        }
+
+        form button {
+            padding: 12px 20px;
+
+            border: none;
+
+            border-radius: 9px;
+
+            background: #123c69;
+
+            color: white;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+
+        /* =========================
+           BOTÕES
+        ========================= */
+
+        .botoes {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .botoes button {
+            padding: 10px 15px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #e8eef6;
+
+            color: #123c69;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .botoes button:hover {
+            background: #dce6f2;
+        }
+
+        #btnLimpar {
+            color: #d32f45;
+            background: #fcecef;
+        }
+
+        #btnLimpar:hover {
+            background: #f8dce1;
+        }
+
+
+        /* =========================
+           TABELA
+        ========================= */
+
+        #tabela {
+            margin-top: 25px;
+
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #123c69;
+
+            color: white;
+
+            padding: 13px;
+
+            text-align: left;
+
+            font-size: 13px;
+        }
+
+        td {
+            padding: 13px;
+
+            border-bottom: 1px solid #edf0f4;
+
+            font-size: 14px;
+        }
+
+        tr:hover td {
+            background: #f8fafc;
+        }
+
+        /* Cores do acesso */
+
+        td:last-child {
+            font-weight: bold;
+            text-transform: capitalize;
+        }
+
+
+        /* =========================
+           RODAPÉ
+        ========================= */
+
+        footer {
+            text-align: center;
+
+            margin-top: 30px;
+
+            color: #8a94a6;
+
+            font-size: 13px;
+        }
+
+
+        /* =========================
+           RESPONSIVIDADE
+        ========================= */
+
+        @media (max-width: 800px) {
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            form {
+                grid-template-columns: 1fr;
+            }
+
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+        }
+
+
+        @media (max-width: 500px) {
+
+            .container {
+                padding: 20px 15px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .tranca-card {
+                padding: 25px 18px;
+            }
+
+            .historico-card {
+                padding: 20px 15px;
+            }
+
+            .historico-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+    <!-- =========================
+         CABEÇALHO
+    ========================== -->
+
+    <header>
+
+        <div class="titulo">
+
+            <div class="icone-logo">
+                🔐
+            </div>
+
+            <div>
+
+                <h1>Tranca IoT</h1>
+
+                <div class="subtitulo">
+                    Sistema de controle e monitoramento
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="status-online">
+
+            <span class="bolinha"></span>
+
+            Sistema online
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =========================
+         TRANCA
+    ========================== -->
+
+    <div class="tranca-card">
+
+        <div class="tranca-topo">
+
+            <span class="tag">
+                CONTROLE DE ACESSO
+            </span>
+
+            <span class="estado">
+                ● DISPOSITIVO ATIVO
+            </span>
+
+        </div>
+
+
+        <div class="cadeado">
+
+            🔒
+
+        </div>
+
+
+        <div class="status-tranca">
+
+            Tranca fechada
+
+        </div>
+
+
+        <div class="descricao-tranca">
+
+            Sistema de segurança ativo
+
+        </div>
+
+
+        <button
+            type="button"
+            id="btnAbrir"
+        >
+
+            🔓 Abrir tranca
+
+        </button>
+
+    </div>
+
+
+
+    <!-- =========================
+         INFORMAÇÕES
+    ========================== -->
+
+    <div class="info-grid">
+
+
+        <div class="info-card">
+
+            <div class="icone">
+                🔐
+            </div>
+
+            <h3>
+                Status da tranca
+            </h3>
+
+            <p>
+                Fechada
+            </p>
+
+        </div>
+
+
+        <div class="info-card">
+
+            <div class="icone">
+                📡
+            </div>
+
+            <h3>
+                Conexão
+            </h3>
+
+            <p class="online">
+                ● Online
+            </p>
+
+        </div>
+
+
+        <div class="info-card">
+
+            <div class="icone">
+                ⚙️
+            </div>
+
+            <h3>
+                Dispositivo
+            </h3>
+
+            <p>
+                ESP32
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================
+         HISTÓRICO
+    ========================== -->
+
+    <div class="historico-card">
+
+
+        <div class="historico-header">
+
+            <div>
+
+                <h2>
+                    Histórico de entrada
+                </h2>
+
+                <span>
+                    Registros de acesso ao sistema
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Cadastro -->
+
+        <form id="formCadastro">
+
+
+            <input
+                type="text"
+                id="Data"
+                placeholder="Data (DD/MM/AA)"
+                required
+            >
+
+
+            <input
+                type="text"
+                id="Horario"
+                placeholder="Horário (HH:MM)"
+                required
+            >
+
+
+            <input
+                type="text"
+                id="acesso"
+                placeholder="Acesso (liberado/negado)"
+                required
+            >
+
+
+            <button type="submit">
+
+                Salvar registro
+
+            </button>
+
+
+        </form>
+
+
+
+        <!-- Botões -->
+
+        <div class="botoes">
+
+
+            <button
+                type="button"
+                id="btnVisualizar"
+            >
+
+                📋 Visualizar histórico
+
+            </button>
+
+
+            <button
+                type="button"
+                id="btnBaixar"
+            >
+
+                📥 Baixar histórico
+
+            </button>
+
+
+            <button
+                type="button"
+                id="btnLimpar"
+            >
+
+                🗑 Limpar dados
+
+            </button>
+
+
+        </div>
+
+
+
+        <!-- Tabela -->
+
+        <div id="tabela"></div>
+
+
+    </div>
+
+
+
+    <footer>
+
+        Tranca IoT © 2026
+
+    </footer>
+
+
+</div>
+
+
+
+<script>
+
+
+    // =====================================
+    // CADASTRO COM LOCALSTORAGE + CSV
+    // =====================================
+
+    const CHAVE = "entrada";
+
+
+    let entrada = JSON.parse(
+        localStorage.getItem(CHAVE) || "[]"
+    );
+
+
+
+    // =====================================
+    // SALVAR
+    // =====================================
+
+    function salvar() {
+
+        localStorage.setItem(
+            CHAVE,
+            JSON.stringify(entrada)
+        );
+
+    }
+
+
+
+    // =====================================
+    // RENDERIZAR HISTÓRICO
+    // =====================================
+
+    function renderizar() {
+
+        const div =
+            document.getElementById("tabela");
+
+
+        if (entrada.length === 0) {
+
+            div.innerHTML =
+                "<p style='color:#7a8699;'>Nenhum registro salvo ainda.</p>";
+
+            return;
+
+        }
+
+
+        let html = `
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>#</th>
+                        <th>Data</th>
+                        <th>Horário</th>
+                        <th>Acesso</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+        `;
+
+
+        entrada.forEach((a, i) => {
+
+            html += `
+
+                <tr>
+
+                    <td>${i + 1}</td>
+
+                    <td>${a.Data}</td>
+
+                    <td>${a.Horario}</td>
+
+                    <td>${a.acesso}</td>
+
+                </tr>
+
+            `;
+
+        });
+
+
+        html += `
+
+                </tbody>
+
+            </table>
+
+        `;
+
+
+        div.innerHTML = html;
+
+    }
+
+
+
+    // =====================================
+    // CADASTRO
+    // =====================================
+
+    document
+        .getElementById("formCadastro")
+        .addEventListener("submit", (e) => {
+
+
+            e.preventDefault();
+
+
+            const Data =
+                document
+                    .getElementById("Data")
+                    .value
+                    .trim();
+
+
+            const Horario =
+                document
+                    .getElementById("Horario")
+                    .value
+                    .trim();
+
+
+            const acesso =
+                document
+                    .getElementById("acesso")
+                    .value
+                    .trim()
+                    .toLowerCase();
+
+
+
+            // VALIDAÇÃO DATA
+
+            if (!/^\d{2}\/\d{2}\/\d{2}$/.test(Data)) {
+
+                alert(
+                    "Data inválida! Use o formato DD/MM/AA."
+                );
+
+                return;
+
+            }
+
+
+
+            // VALIDAÇÃO HORÁRIO
+
+            if (
+                !/^(?:[01]\d|2[0-3]):[0-5]\d$/
+                    .test(Horario)
+            ) {
+
+                alert(
+                    "Horário inválido! Use o formato HH:MM."
+                );
+
+                return;
+
+            }
+
+
+
+            // VALIDAÇÃO ACESSO
+
+            if (
+                acesso !== "liberado" &&
+                acesso !== "negado"
+            ) {
+
+                alert(
+                    'Acesso deve ser "liberado" ou "negado".'
+                );
+
+                return;
+
+            }
+
+
+
+            // ADICIONAR
+
+            entrada.push({
+
+                Data: Data,
+
+                Horario: Horario,
+
+                acesso: acesso
+
+            });
+
+
+
+            salvar();
+
+            renderizar();
+
+            e.target.reset();
+
+        });
+
+
+
+    // =====================================
+    // VISUALIZAR
+    // =====================================
+
+    document
+        .getElementById("btnVisualizar")
+        .addEventListener(
+            "click",
+            renderizar
+        );
+
+
+
+    // =====================================
+    // ABRIR TRANCA
+    // =====================================
+
+    document
+        .getElementById("btnAbrir")
+        .addEventListener(
+            "click",
+            () => {
+
+                alert("Tranca aberta!");
+
+            }
+        );
+
+
+
+    // =====================================
+    // BAIXAR CSV
+    // =====================================
+
+    document
+        .getElementById("btnBaixar")
+        .addEventListener(
+            "click",
+            () => {
+
+
+                if (entrada.length === 0) {
+
+                    alert(
+                        "Não existem registros para baixar."
+                    );
+
+                    return;
+
+                }
+
+
+                const BOM = "\uFEFF";
+
+
+                const linhas = [
+                    "Data;Horario;Acesso"
+                ];
+
+
+                entrada.forEach((a) => {
+
+                    linhas.push(
+                        `${a.Data};${a.Horario};${a.acesso}`
+                    );
+
+                });
+
+
+                const blob =
+                    new Blob(
+                        [
+                            BOM +
+                            linhas.join("\n")
+                        ],
+                        {
+                            type:
+                                "text/csv;charset=utf-8;"
+                        }
+                    );
+
+
+                const link =
+                    document.createElement("a");
+
+
+                link.href =
+                    URL.createObjectURL(blob);
+
+
+                link.download =
+                    "historico_entrada.csv";
+
+
+                link.click();
+
+
+                URL.revokeObjectURL(
+                    link.href
+                );
+
+            }
+        );
+
+
+
+    // =====================================
+    // LIMPAR
+    // =====================================
+
+    document
+        .getElementById("btnLimpar")
+        .addEventListener(
+            "click",
+            () => {
+
+
+                if (
+                    confirm(
+                        "Apagar todos os registros?"
+                    )
+                ) {
+
+
+                    entrada = [];
+
+
+                    salvar();
+
+
+                    renderizar();
+
+                }
+
+            }
+        );
+
+
+
+    // =====================================
+    // CARREGAR HISTÓRICO
+    // =====================================
+
+    renderizar();
+
+
+</script>
+
+</body>
+
+</html>
